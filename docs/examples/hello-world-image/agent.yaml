@@ -1,0 +1,12 @@
+apiVersion: pandra.io/v1
+kind: Agent
+metadata:
+  name: hello-world-time
+spec:
+  prompt:
+    - text: |
+        say hi! if it's AM time, say good morning.
+  mcps:
+    - name: time-mcp
+      stdio:
+        command: ["uv", "tool", "run", "mcp-server-time"]

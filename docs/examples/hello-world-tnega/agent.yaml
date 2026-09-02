@@ -1,0 +1,8 @@
+apiVersion: pandra.io/v1
+kind: Agent
+metadata:
+  name: hello-world-tnega
+spec:
+  systemPrompt:
+    - git:
+        url: https://github.com/pandra-io/pandra/docs/examples/test-sys-prompt.md

@@ -1,0 +1,11 @@
+apiVersion: pandra.io/v1
+kind: Agent
+metadata:
+  name: hello-world-zip
+spec:
+  prompt:
+    - text: |
+        get a name to greet from the file `name`.
+        if the file is missing, abort.
+        write a greeting to this name.
+        write the result into a zip file called `greeting.zip`.

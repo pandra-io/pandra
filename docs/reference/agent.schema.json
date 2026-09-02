@@ -1,0 +1,427 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pandra.io/schemas/agent.schema.json",
+  "title": "pandra document",
+  "description": "Schema for pandra.io/v1 Agent and AgentRunProfile documents.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/agentDocument"
+    },
+    {
+      "$ref": "#/$defs/agentRunProfileDocument"
+    }
+  ],
+  "$defs": {
+    "agentDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "properties": {
+        "apiVersion": {
+          "const": "pandra.io/v1"
+        },
+        "kind": {
+          "const": "Agent"
+        },
+        "metadata": {
+          "$ref": "#/$defs/metadata"
+        },
+        "spec": {
+          "$ref": "#/$defs/spec"
+        }
+      }
+    },
+    "agentRunProfileDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "properties": {
+        "apiVersion": {
+          "const": "pandra.io/v1"
+        },
+        "kind": {
+          "const": "AgentRunProfile"
+        },
+        "metadata": {
+          "$ref": "#/$defs/agentRunProfileMetadata"
+        },
+        "spec": {
+          "$ref": "#/$defs/agentRunProfileSpec"
+        }
+      }
+    },
+    "agentRunProfileMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^(?=.*\\S)[^\\u0000-\\u001F\\u007F-\\u009F]*$"
+        }
+      }
+    },
+    "agentRunProfileSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "harness": {
+          "$ref": "#/$defs/agentRunProfileHarness"
+        },
+        "llm": {
+          "$ref": "#/$defs/agentRunProfileLlm"
+        },
+        "envs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/profileEnv"
+          }
+        }
+      }
+    },
+    "agentRunProfileHarness": {
+      "type": "object",
+      "additionalProperties": false,
+      "maxProperties": 1,
+      "properties": {
+        "claudecode": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "bare": {
+              "type": "boolean"
+            }
+          }
+        },
+        "codex": {
+          "$ref": "#/$defs/emptyObject"
+        },
+        "pi": {
+          "$ref": "#/$defs/emptyObject"
+        }
+      }
+    },
+    "agentRunProfileLlm": {
+      "type": "object",
+      "additionalProperties": false,
+      "maxProperties": 1,
+      "properties": {
+        "anthropic": {
+          "$ref": "#/$defs/modelProvider"
+        },
+        "openai": {
+          "$ref": "#/$defs/modelProvider"
+        },
+        "openrouter": {
+          "$ref": "#/$defs/modelProvider"
+        }
+      }
+    },
+    "modelProvider": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "model": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "emptyObject": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "default": "latest"
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "prompt": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          }
+        },
+        "systemPrompt": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          }
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          }
+        },
+        "mcps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/mcp"
+          }
+        },
+        "envs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/env"
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "fs": {
+          "$ref": "#/$defs/filesystemSource"
+        },
+        "git": {
+          "$ref": "#/$defs/gitSource"
+        },
+        "http": {
+          "$ref": "#/$defs/httpSource"
+        }
+      },
+      "oneOf": [
+        {
+          "required": ["text"]
+        },
+        {
+          "required": ["fs"]
+        },
+        {
+          "required": ["git"]
+        },
+        {
+          "required": ["http"]
+        }
+      ]
+    },
+    "filesystemSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/).+"
+        },
+        "absolutePath": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^/"
+        }
+      },
+      "oneOf": [
+        {
+          "required": ["path"]
+        },
+        {
+          "required": ["absolutePath"]
+        }
+      ]
+    },
+    "gitSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(https?|ssh)://"
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commit": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "not": {
+        "required": ["ref", "commit"]
+      }
+    },
+    "httpSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 1
+        },
+        "archive": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "mcp": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stdio": {
+          "$ref": "#/$defs/stdioMcp"
+        },
+        "http": {
+          "$ref": "#/$defs/httpMcp"
+        }
+      },
+      "oneOf": [
+        {
+          "required": ["stdio"]
+        },
+        {
+          "required": ["http"]
+        }
+      ]
+    },
+    "stdioMcp": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command"],
+      "properties": {
+        "command": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "envs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/env"
+          }
+        }
+      }
+    },
+    "httpMcp": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 1
+        },
+        "headers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/header"
+          }
+        }
+      }
+    },
+    "env": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "value": {
+          "type": "string",
+          "not": {
+            "pattern": "__PANDRA_REF_"
+          }
+        }
+      }
+    },
+    "profileEnv": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "value": {
+          "type": "string",
+          "not": {
+            "pattern": "__PANDRA_REF_"
+          }
+        },
+        "hostEnv": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "keychain": {
+          "$ref": "#/$defs/profileKeychain"
+        }
+      },
+      "oneOf": [{ "required": ["value"] }, { "required": ["hostEnv"] }, { "required": ["keychain"] }]
+    },
+    "profileKeychain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["service", "account"],
+      "properties": {
+        "service": {
+          "const": "pandra"
+        },
+        "account": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^(?=.*\\S)[^\\u0000-\\u001F\\u007F-\\u009F]*$"
+        }
+      }
+    },
+    "header": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "string",
+          "not": {
+            "pattern": "__PANDRA_REF_"
+          }
+        },
+        "env": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        }
+      },
+      "oneOf": [{ "required": ["value"] }, { "required": ["env"] }]
+    }
+  }
+}

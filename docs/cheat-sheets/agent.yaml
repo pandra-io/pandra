@@ -1,0 +1,42 @@
+apiVersion: pandra.io/v1
+kind: Agent
+metadata:
+  name: ""
+  version: "" # defaults to latest
+spec:
+  prompt:
+    - # common sources; mutually exclusive:
+      text: "" # verbatim
+      git: # git repository
+        url: "" # git url. `//` selects a path; GitHub also accepts `/path` and `/tree/BRANCH/path`
+        # mutually exclusive:
+        commit: "" # commit id
+        ref: "" # git ref suffix
+      http: # web
+        url: ""
+        archive: false # extract the downloaded archive
+      fs: # filesystem
+        # mutually exclusive:
+        path: "" # relative to this file
+        absolutePath: "" # absolute in the build machine filesystem
+  systemPrompt:
+    - # common sources
+  skills:
+    -  # common sources
+  envs:
+    - name: ""
+      value: "" # literal. omit value when the variable is required at run time
+  mcps:
+    - name: ""
+      # mutually exclusive:
+      stdio:
+        command: [""] # command parts as strings array
+        envs:
+          - name: ""
+            value: "" # literal. omit value when the entry name is required at run time
+      http:
+        url: ""
+        headers:
+          - name: ""
+            value: "" # literal
+            env: "" # mutually exclusive with value; required environment variable rendered as the header value
