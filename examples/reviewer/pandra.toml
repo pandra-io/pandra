@@ -1,0 +1,27 @@
+#:schema https://pandra.io/schemas/agent-definition/v0.schema.json
+name = "reviewer"
+version = "0.1.0"
+description = "Reviews the changes in your workspace for correctness and safety first, then needless complexity"
+license = "Apache-2.0"
+
+# Karpathy's guidelines come first, so that the agent's own instructions below can override them.
+[[instructions]]
+git = "https://github.com/forrestchang/andrej-karpathy-skills"
+path = "CLAUDE.md"
+rev = "2c606141936f1eeef17fa3043a72095b4765b9c2"
+
+[[instructions]]
+path = "instructions.md"
+
+[initial-prompt]
+path = "prompts/initial.md"
+
+[skills.ponytail-review]
+git = "https://github.com/DietrichGebert/ponytail"
+path = "skills/ponytail-review"
+tag = "v5.3.3"
+
+[mcp-servers.context7]
+registry = "io.github.upstash/context7"
+version = "4.7.0"
+method = "remote"

@@ -1,0 +1,25 @@
+version = 1
+
+[[skill]]
+name = "ponytail-review"
+git = "https://github.com/DietrichGebert/ponytail"
+path = "skills/ponytail-review"
+tag = "v5.3.3"
+revision = "7801d061243d7b753bad0e0b3c057cd250b11755"
+digest = "sha256:028a0e362754cbe27b1d4e1812c35e275da2150d64144f9f10e72bb09ab95906"
+
+[[instructions]]
+index = 0
+git = "https://github.com/forrestchang/andrej-karpathy-skills"
+path = "CLAUDE.md"
+rev = "2c606141936f1eeef17fa3043a72095b4765b9c2"
+revision = "2c606141936f1eeef17fa3043a72095b4765b9c2"
+digest = "sha256:694a2d721e41c385f3db492838c23299826df5ba9809e3b0721aac70021e196a"
+
+[[mcp-server]]
+name = "context7"
+registry = "io.github.upstash/context7"
+version = "4.7.0"
+registry-url = "https://registry.modelcontextprotocol.io"
+digest = "sha256:e5551faddf240a9b35c0a93c36a64fb42ede88997dcdca23855863d49bef8b0f"
+method = "remote:https://mcp.context7.com/mcp"

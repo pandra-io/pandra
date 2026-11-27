@@ -1,0 +1,14 @@
+#:schema https://pandra.io/schemas/agent-definition/v0.schema.json
+name = "hello-world"
+version = "0.1.0"
+description = "Greets you with a card that shows Pandra delivered its instructions, skill, and prompt"
+license = "Apache-2.0"
+
+[[instructions]]
+path = "instructions.md"
+
+[skills.greet]
+path = "skills/greet"
+
+[initial-prompt]
+path = "prompts/initial.md"

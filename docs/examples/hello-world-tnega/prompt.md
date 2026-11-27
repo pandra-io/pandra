@@ -1,1 +1,0 @@
-Say Hi in Tnega!
